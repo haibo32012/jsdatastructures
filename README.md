@@ -1,0 +1,1 @@
+All sources of this library is from the data structures and Algorithms with javascript.pdf book.
