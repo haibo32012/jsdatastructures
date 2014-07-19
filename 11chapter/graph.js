@@ -1,5 +1,6 @@
 function Graph(v) {
 	this.vertices = v;
+	this.vertexList = [];
 	this.edges = 0;
 	this.adj = [];
 	for(var i =0; i < this.vertices; ++i) {
@@ -15,6 +16,10 @@ function Graph(v) {
 	this.dfs = dfs;
 	this.bfs = bfs;
 	this.edgeTo = [];
+	this.hasPathTo = hasPathTo;
+	this.pathTo = pathTo;
+	this.topSortHelper = topSortHelper;
+	this.topSort = topSort;
 }
 
 function addEdge(v, w) {
@@ -65,12 +70,61 @@ function bfs(s) {
 	}
 }
 
+function topSort() {
+	var stack = [];
+	var visited = [];
+	for(var i=0; i<this.vertices; i++) {
+		visited[i] = false;
+	}
+	for(var i=0; i<this.vertices; i++) {
+		if (visited[i] == false) {
+			this.topSortHelper(i, visited, stack);
+		}
+	}
+	for(var i=0; i<stack.length; i++) {
+		if (stack[i] != undefined && stack[i] != false) {
+			console.log(this.vertexList[stack[i]]);
+		}
+	}
+}
+
+function topSortHelper(v, visited, stack) {
+	visited[v] = true;
+	for(var w in this.adj[v]) {
+		if (!visited[w]) {
+			this.topSortHelper(visited[w], visited, stack);
+		}
+	}
+	stack.push(v);
+}
+
+function hasPathTo(v) {
+	return this.marked[v];
+}
+
+function pathTo(v) {
+	var source = 0;
+	if (!this.hasPathTo(v)) {
+		return undefined;
+	}
+	var path = [];
+	for(var i=v; i != source; i = this.edgeTo[i]) {
+		path.push(i);
+	}
+	path.push(s);
+	return path;
+}
+
 // main program
 
-var gr = new Graph(5);
-gr.addEdge(0,1);
-gr.addEdge(0,2);
+var gr = new Graph(6);
+gr.addEdge(1,2);
+gr.addEdge(2,5);
 gr.addEdge(1,3);
-gr.addEdge(2,4);
+gr.addEdge(1,4);
+gr.addEdge(0,1);
+gr.vertexList = ["CS1", "CS2", "Data Structures", 
+"Assembly Language", "Operating Systems",
+"Algorithms"];
 gr.showGraph();
-gr.bfs(0);
+gr.topSort();
